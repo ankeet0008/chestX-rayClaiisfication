@@ -109,9 +109,23 @@ class Predictor:
                 self.model.eval()
                 self.framework = "pytorch"
                 logger.info(f"Loaded PyTorch model from {model_path}")
+                logger.info(f"Loaded PyTorch model from {model_path}")
                 return
             except Exception as e:
                 logger.error(f"Failed to load PyTorch model: {e}")
+                
+        # Try loading Scikit-Learn model
+        pkl_files = list(model_dir.glob("*.pkl")) + list(model_dir.glob("*.joblib"))
+        if pkl_files:
+            try:
+                import joblib
+                model_path = pkl_files[0]
+                self.model = joblib.load(model_path)
+                self.framework = "sklearn"
+                logger.info(f"Loaded Scikit-Learn model from {model_path}")
+                return
+            except Exception as e:
+                logger.error(f"Failed to load Scikit-Learn model: {e}")
         
         logger.warning("No model file found in model directory — running in DEMO mode.")
     
@@ -146,6 +160,11 @@ class Predictor:
                     output = self.model(tensor)
                     probabilities = torch.nn.functional.softmax(output, dim=1)[0].numpy()
             
+            elif self.framework == "sklearn":
+                # Scikit-learn predict_proba returns array of shape (1, num_classes)
+                # Note: Not all SVCs support probabilities, but RandomForests do.
+                probabilities = self.model.predict_proba(processed)[0]
+                
             else:
                 return self._demo_predict()
             

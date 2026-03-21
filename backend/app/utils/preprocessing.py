@@ -61,6 +61,12 @@ def preprocess_image(
     Returns:
         Preprocessed numpy array ready for model inference
     """
+    if framework == "sklearn":
+        img = Image.open(io.BytesIO(file_bytes)).convert("L")
+        img = img.resize((64, 64))
+        img_array = np.array(img).flatten()
+        return np.expand_dims(img_array, axis=0)
+        
     # Load and convert to RGB
     img = Image.open(io.BytesIO(file_bytes))
     img = img.convert("RGB")

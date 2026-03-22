@@ -16,8 +16,9 @@
 
 ## ✨ Features
 
-- 🔬 **Multi-Class Classification** — Normal, Pneumonia, COVID-19, Tuberculosis, Lung Opacity
-- ⚡ **Instant Results** — Get predictions in seconds with confidence scores
+- 🔬 **Multi-Class Classification** — Normal, COVID, Lung Opacity, Bacterial & Viral Pneumonia
+- ⚡ **Instant Results** — 87.2% Accuracy on our latest 25k+ dataset
+- 📊 **Enhanced Model** — Uses Scikit-Learn's HistGradientBoosting for 5 diagnostic classes
 - 🎨 **Modern UI** — Beautiful, responsive interface with dark/light mode
 - 📊 **Dashboard** — Track analysis history with performance metrics
 - 🐳 **Docker Ready** — One-command deployment with Docker Compose
@@ -90,10 +91,11 @@ pip install -r requirements.txt
 
 Place your trained model file in the `model/` directory:
 
-| Framework   | File Extension | Example      |
-| ----------- | -------------- | ------------ |
-| TensorFlow  | `.h5`          | `model.h5`   |
-| PyTorch     | `.pt` / `.pth` | `model.pt`   |
+| Framework    | File Extension | Example             |
+| ------------ | -------------- | ------------------- |
+| Scikit-Learn | `.pkl`         | `chestxr_sklearn.pkl`|
+| TensorFlow   | `.h5`          | `model.h5`          |
+| PyTorch      | `.pt` / `.pth` | `model.pt`          |
 
 > **Note:** If no model is found, the app runs in **Demo Mode** with realistic random predictions — perfect for frontend development.
 
@@ -121,32 +123,32 @@ The frontend will be available at `http://localhost:5173`.
 
 ---
 
-## 🧠 Training from Scratch / Adding Custom Datasets
-
-If you want to train a brand new PyTorch model from scratch, or you want to add your own X-ray images, follow these steps:
+If you want to train a brand new classification model, or you want to add your own X-ray images, follow these steps:
 
 ### 1. Structure Your Custom Images
 By default, the training script uses the `data/arranged_train` directory. Just drop your `.jpg` or `.png` X-ray images into the folders that match their condition:
 ```
 chestxray/data/arranged_train/
 ├── Normal/                  # Drop healthy lung X-rays here
-├── Bacterial_Pneumonia/     # Drop bacterial pneumonia X-rays here
-├── Viral_Pneumonia/         # Drop viral pneumonia X-rays here
-└── COVID-19/                # (Optional) Create a new folder for a new class!
+├── COVID/                   # COVID-19 specific X-rays
+├── Lung_Opacity/            # Non-infectious opacity
+├── Bacterial_Pneumonia/     # Bacterial infections
+└── Viral_Pneumonia/         # Viral infections
 ```
-*Note: If a folder is detected, it automatically becomes a medical classification class in the AI.*
+*Note: If a new folder is detected, it automatically becomes a medical classification class in the AI.*
 
 ### 2. Run the Training Pipeline
 Once your images are in place (or if you just want to download the base Kaggle dataset automatically), simply run:
 ```bash
 cd backend
-python train_custom_model.py
+# Ensure you have the virtual environment activated
+.\venv\Scripts\python.exe train_custom_model.py
 ```
 The script will automatically:
 1. (Optional) Download base Kaggle datasets if needed.
-2. Build a CNN architecture matching the exact number of folders.
-3. Train the model using PyTorch.
-4. Auto-save `model/chestxr_model.pt` and `model/classes.json`.
+2. Search all subfolders recursively for images.
+3. Train a **HistGradientBoostingClassifier** (87.2% accuracy).
+4. Auto-save `backend/model/chestxr_sklearn.pkl` and `backend/model/classes.json`.
 
 ### 3. Restart the API
 Stop and restart your FastAPI backend (`python -m app.main`). The backend will automatically detect the new `classes.json`, load your freshly trained model, and serve live predictions in the UI!

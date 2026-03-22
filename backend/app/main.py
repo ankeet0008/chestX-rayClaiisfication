@@ -20,10 +20,7 @@ from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from dotenv import load_dotenv
 
-from app.api.routes import router
-
-# Load environment variables
-load_dotenv()
+from pydantic import BaseModel
 
 # ─── Logging ────────────────────────────────────────────────
 logging.basicConfig(
@@ -32,6 +29,11 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 logger = logging.getLogger(__name__)
+
+from app.api.routes import router
+
+# Load environment variables
+load_dotenv()
 
 # ─── Rate Limiter ───────────────────────────────────────────
 limiter = Limiter(key_func=get_remote_address)

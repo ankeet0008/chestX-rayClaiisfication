@@ -63,8 +63,10 @@ def preprocess_image(
     """
     if framework == "sklearn":
         img = Image.open(io.BytesIO(file_bytes)).convert("L")
-        img = img.resize((64, 64))
-        img_array = np.array(img).flatten()
+        # Match resolution of 96x96
+        img = img.resize((96, 96), Image.Resampling.LANCZOS)
+        # Normalize to [0, 1] and flatten
+        img_array = np.array(img).flatten().astype(np.float32) / 255.0
         return np.expand_dims(img_array, axis=0)
         
     # Load and convert to RGB

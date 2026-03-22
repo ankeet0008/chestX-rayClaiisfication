@@ -16,94 +16,122 @@ import joblib
 def main():
     print("=" * 60)
     print(" ChestXR Scikit-Learn Model Training Pipeline")
-    print("=" * 60)
-    
-    print("\n[1/4] Preparing dataset via kagglehub...")
-    dataset_path = ""
-    for attempt in range(1, 11):
-        try:
-            dataset_path = kagglehub.dataset_download("kostasdiamantaras/chest-xrays-bacterial-viral-pneumonia-normal")
-            break
-        except Exception:
-            if attempt == 10: raise
-            time.sleep(5)
-            
-    labels_csv = os.path.join(dataset_path, "labels_train.csv")
-    raw_images_dir = os.path.join(dataset_path, "train_images")
-    if os.path.isdir(os.path.join(raw_images_dir, "train_images")):
-        raw_images_dir = os.path.join(raw_images_dir, "train_images")
-        
     arranged_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data", "arranged_train"))
     
-    if os.path.exists(labels_csv) and os.path.exists(raw_images_dir):
-        class_mapping = {"0": "Normal", "1": "Bacterial_Pneumonia", "2": "Viral_Pneumonia"}
-        os.makedirs(arranged_dir, exist_ok=True)
-        for c in class_mapping.values():
-            os.makedirs(os.path.join(arranged_dir, c), exist_ok=True)
+    print("\n[1/4] Preparing dataset via kagglehub (Optional)...")
+    try:
+        dataset_path = ""
+        for attempt in range(1, 4): # Reduced attempts
+            try:
+                dataset_path = kagglehub.dataset_download("kostasdiamantaras/chest-xrays-bacterial-viral-pneumonia-normal")
+                break
+            except Exception:
+                if attempt == 3: raise
+                time.sleep(2)
+                
+        labels_csv = os.path.join(dataset_path, "labels_train.csv")
+        raw_images_dir = os.path.join(dataset_path, "train_images")
+        if os.path.isdir(os.path.join(raw_images_dir, "train_images")):
+            raw_images_dir = os.path.join(raw_images_dir, "train_images")
             
-        with open(labels_csv, 'r', encoding='utf-8') as f:
-            reader = csv.reader(f)
-            next(reader)
-            count = 0
-            for row in reader:
-                if len(row) < 2: continue
-                fname, cid = row[0], row[1]
-                src = os.path.join(raw_images_dir, fname)
-                dst = os.path.join(arranged_dir, class_mapping.get(cid, "Unknown"), fname)
-                if os.path.exists(src) and not os.path.exists(dst):
-                    shutil.copy2(src, dst)
-                    count += 1
-        if count > 0:
-            print(f"Added {count} new images to arranged folders.")
+        if os.path.exists(labels_csv) and os.path.exists(raw_images_dir):
+            class_mapping = {"0": "Normal", "1": "Bacterial_Pneumonia", "2": "Viral_Pneumonia"}
+            os.makedirs(arranged_dir, exist_ok=True)
+            for c in class_mapping.values():
+                os.makedirs(os.path.join(arranged_dir, c), exist_ok=True)
+                
+            with open(labels_csv, 'r', encoding='utf-8') as f:
+                reader = csv.reader(f)
+                next(reader)
+                count = 0
+                for row in reader:
+                    if len(row) < 2: continue
+                    fname, cid = row[0], row[1]
+                    src = os.path.join(raw_images_dir, fname)
+                    dst = os.path.join(arranged_dir, class_mapping.get(cid, "Unknown"), fname)
+                    if os.path.exists(src) and not os.path.exists(dst):
+                        shutil.copy2(src, dst)
+                        count += 1
+            if count > 0:
+                print(f"Added {count} new images from Kaggle to arranged folders.")
+    except Exception as e:
+        print(f"Note: Could not refresh data from Kaggle ({e}). Using existing data in 'data/arranged_train'.")
                     
     train_dir = arranged_dir
     print(f"Dataset ready at: {train_dir}")
     
     # 2. Load Images and Features
-    print("\n[2/4] Extracting features from images (resizing to 64x64 Grayscale)...")
-    target_size = (64, 64)
+    # Resizing to 96x96 for a better balance between detail and speed
+    print("\n[2/4] Extracting features from images (resizing to 96x96 Grayscale)...")
+    target_size = (96, 96)
     data = []
     labels = []
     
+    # Get all subdirectories in arranged_dir as classes
     classes = [d for d in os.listdir(train_dir) if os.path.isdir(os.path.join(train_dir, d))]
     classes.sort()
+    
+    import glob
     
     for class_idx, class_name in enumerate(classes):
         class_folder = os.path.join(train_dir, class_name)
         img_count = 0
-        for img_name in os.listdir(class_folder):
-            if img_name.lower().endswith(('.png', '.jpg', '.jpeg')):
-                img_path = os.path.join(class_folder, img_name)
-                try:
-                    img = Image.open(img_path).convert('L')
-                    img = img.resize(target_size)
-                    img_array = np.array(img).flatten() # Flatten 2D into 1D feature vector
-                    data.append(img_array)
-                    labels.append(class_idx)
-                    img_count += 1
-                except Exception:
-                    pass
+        # Recursive search for images in case user nested them (e.g., COVID/images/*.jpg)
+        pattern = os.path.join(class_folder, "**", "*.[jJ][pP]*[gG]")
+        img_paths = glob.glob(pattern, recursive=True)
+        # Also include PNGs
+        pattern_png = os.path.join(class_folder, "**", "*.[pP][nN][gG]")
+        img_paths.extend(glob.glob(pattern_png, recursive=True))
+        
+        for img_path in img_paths:
+            try:
+                img = Image.open(img_path).convert('L')
+                img = img.resize(target_size, Image.Resampling.LANCZOS) # Using Lanczos for better resizing quality
+                img_array = np.array(img).flatten() # Flatten 2D into 1D feature vector
+                data.append(img_array.astype(np.float32) / 255.0) # Normalize pixels to [0, 1]
+                labels.append(class_idx)
+                img_count += 1
+            except Exception:
+                pass
         print(f"   Loaded {img_count} images for class '{class_name}'")
     
     X = np.array(data)
     y = np.array(labels)
     
-    print(f"Extracted {len(X)} total images. Feature vector size: {X.shape[1]}")
+    print(f"\nExtracted {len(X)} total images. Feature vector size: {X.shape[1]} (96x96)")
     print(f"Classes: {classes}")
 
     if len(X) == 0:
         print("No images found! Cannot train.")
         return
 
+    # Check class distribution
+    if len(classes) > 0:
+        counts = [np.sum(y == i) for i in range(len(classes))]
+        for cls, count in zip(classes, counts):
+            print(f"   - {cls}: {count} images")
+
     # Train / Test split
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y if len(np.unique(y)) > 1 else None)
 
     # 3. Train Scikit-Learn Model
-    print("\n[3/4] Training Random Forest model...")
+    print("\n[3/4] Training HistGradientBoostingClassifier model...")
+    print("      (Using Gradient Boosting for improved accuracy)")
     start_time = time.time()
     
-    # Using RandomForestClassifier: robust, handles tabular well, default 100 trees
-    model = make_pipeline(StandardScaler(), RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1))
+    from sklearn.ensemble import HistGradientBoostingClassifier
+    
+    # HistGradientBoosting is typically more accurate on high-dimensional data than RF
+    model = make_pipeline(
+        StandardScaler(), 
+        HistGradientBoostingClassifier(
+            max_iter=150,           # Number of boosting iterations
+            learning_rate=0.1,      # Learning rate
+            random_state=42, 
+            l2_regularization=0.5, # Reduced overfitting
+            max_leaf_nodes=63     # Complexity
+        )
+    )
     model.fit(X_train, y_train)
     
     train_time = time.time() - start_time

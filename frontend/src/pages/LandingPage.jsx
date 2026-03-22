@@ -1,233 +1,198 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
-import { 
-  HiOutlineArrowRight, 
-  HiOutlineShieldCheck, 
-  HiOutlineLightningBolt, 
-  HiOutlineChartBar, 
-  HiOutlineCloudUpload,
-  HiOutlineStatusOnline,
-  HiOutlineUserGroup
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import {
+  HiOutlineArrowRight,
+  HiOutlineShieldCheck,
+  HiOutlineLightningBolt,
+  HiOutlineChartBar,
+  HiOutlineGlobe,
+  HiOutlineUpload,
+  HiOutlineEye,
+  HiOutlineDocumentReport,
 } from 'react-icons/hi'
-import { FaLungs, FaHeartbeat } from 'react-icons/fa'
 
-/* ─── Data ────────────────────────────────────────────────── */
+gsap.registerPlugin(ScrollTrigger)
+
+const C = ({ maxW = 1100, children, style = {} }) => (
+  <div style={{ maxWidth: maxW, margin: '0 auto', padding: '0 1.5rem', width: '100%', ...style }}>
+    {children}
+  </div>
+)
+
 const STATS = [
-  { value: '87.2%', label: 'Avg Accuracy', sub: 'Validated' },
-  { value: '<2s', label: 'Inference', sub: 'Per Scan' },
-  { value: '25k+', label: 'Training Set', sub: 'High Res' },
-  { value: '5', label: 'Pathologies', sub: 'Detected' },
+  { value: '87.2%', label: 'Accuracy', icon: '🎯' },
+  { value: '<2s', label: 'Inference', icon: '⚡' },
+  { value: '25k+', label: 'X-Rays Trained', icon: '🏥' },
+  { value: '5', label: 'Conditions', icon: '🔬' },
 ]
 
 const FEATURES = [
-  {
-    icon: HiOutlineShieldCheck,
-    title: 'Certified Integrity',
-    desc: 'Our models are validated against 25,000+ expert-labeled radiographic examinations for unmatched diagnostic precision.',
-  },
-  {
-    icon: HiOutlineLightningBolt,
-    title: 'Instant Execution',
-    desc: 'Proprietary Gradient Boosting architecture delivers detailed pathology reports in under 2 seconds.',
-  },
-  {
-    icon: HiOutlineUserGroup,
-    title: 'Clinical Support',
-    desc: 'Designed as a 2nd-opinion tool for over-burdened radiology departments globally.',
-  },
+  { icon: HiOutlineShieldCheck, title: 'Clinical-Grade AI', desc: 'Validated against 25,000+ expert-labeled radiographs for reliable diagnostic support.', color: '#6366f1' },
+  { icon: HiOutlineLightningBolt, title: 'Instant Results', desc: 'HistGradient Boosting delivers pathology reports in under 2 seconds.', color: '#f59e0b' },
+  { icon: HiOutlineGlobe, title: 'Multi-Class Detection', desc: 'Detects Normal, COVID-19, Lung Opacity, Viral & Bacterial Pneumonia.', color: '#06b6d4' },
+]
+
+const STEPS = [
+  { num: '01', icon: HiOutlineUpload, title: 'Upload', desc: 'Drop your chest X-ray in JPG or PNG format' },
+  { num: '02', icon: HiOutlineEye, title: 'Analyze', desc: 'Our AI scans & classifies in real-time' },
+  { num: '03', icon: HiOutlineDocumentReport, title: 'Report', desc: 'Get a detailed pathology breakdown' },
 ]
 
 export default function LandingPage() {
-  const heroRef = useRef(null)
-  const orbsRef = useRef([])
-  const contentRef = useRef(null)
+  const pageRef = useRef(null)
 
   useEffect(() => {
-    // Initial reveal
     const ctx = gsap.context(() => {
-      // 1. Text reveals
-      gsap.from(".reveal-item", {
-        y: 40,
-        opacity: 0,
-        duration: 1.2,
-        stagger: 0.15,
-        ease: "power4.out",
-        delay: 0.5
-      })
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out', duration: 0.9 } })
+      tl.from('.hero-badge', { y: -20, opacity: 0 })
+        .from('.hero-title-line', { y: 60, opacity: 0, stagger: 0.15 }, '-=0.5')
+        .from('.hero-desc', { y: 30, opacity: 0 }, '-=0.4')
+        .from('.hero-btn', { y: 20, opacity: 0, stagger: 0.1 }, '-=0.3')
+        .from('.hero-visual', { scale: 0.9, opacity: 0 }, '-=0.5')
 
-      // 2. Stats reveal
-      gsap.from(".stat-card", {
-        scale: 0.9,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: "back.out(1.7)",
-        delay: 1.5
-      })
+      gsap.from('.stat-card', { y: 40, opacity: 0, stagger: 0.08, duration: 0.7, clearProps: 'all', scrollTrigger: { trigger: '.stats-grid', start: 'top 100%', once: true } })
+      gsap.from('.feat-card', { y: 50, opacity: 0, stagger: 0.12, duration: 0.8, clearProps: 'all', scrollTrigger: { trigger: '.feat-grid', start: 'top 100%', once: true } })
+      gsap.from('.step-item', { y: 30, opacity: 0, stagger: 0.15, duration: 0.7, clearProps: 'all', scrollTrigger: { trigger: '.steps-grid', start: 'top 100%', once: true } })
+      gsap.from('.cta-box', { y: 50, opacity: 0, duration: 1, clearProps: 'all', scrollTrigger: { trigger: '.cta-box', start: 'top 100%', once: true } })
 
-      // 3. Orbs floating
-      orbsRef.current.forEach((orb, i) => {
-        gsap.to(orb, {
-          x: "random(-40, 40)",
-          y: "random(-40, 40)",
-          duration: "random(4, 8)",
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-          delay: i * 0.5
-        })
-      })
-    }, heroRef)
-
+      gsap.to('.orb-a', { y: -25, x: 15, duration: 7, repeat: -1, yoyo: true, ease: 'sine.inOut' })
+      gsap.to('.orb-b', { y: 20, x: -20, duration: 9, repeat: -1, yoyo: true, ease: 'sine.inOut' })
+    }, pageRef)
     return () => ctx.revert()
   }, [])
 
-  return (
-    <div ref={heroRef} className="relative bg-primary overflow-hidden min-h-screen">
-      {/* ─── Premium Background Elements ─── */}
-      <div className="mesh-bg opacity-40" />
-      
-      {/* Floating Medical Orbs */}
-      {[0, 1, 2].map(i => (
-        <div 
-          key={i}
-          ref={el => orbsRef.current[i] = el}
-          className="floating-orb"
-          style={{
-            width: i === 0 ? '500px' : '300px',
-            height: i === 0 ? '500px' : '300px',
-            background: i === 0 ? 'var(--color-primary)' : i === 1 ? 'var(--color-accent)' : 'var(--color-secondary)',
-            top: i === 0 ? '-10%' : i === 1 ? '40%' : '70%',
-            left: i === 0 ? '60%' : i === 1 ? '-10%' : '50%',
-            filter: 'blur(120px)',
-            opacity: 0.2
-          }}
-        />
-      ))}
+  const sectionStyle = { width: '100%', position: 'relative', zIndex: 1 }
 
-      {/* ─── Hero Content ─── */}
-      <div className="relative z-10 container mx-auto px-4 pt-32 pb-20">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Badge */}
-          <div className="reveal-item inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] uppercase tracking-widest font-bold text-primary-light mb-8">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary-light pulse-primary" />
-            V2.0 Core Engine Live
+  return (
+    <div ref={pageRef} style={{ width: '100%', position: 'relative' }}>
+      {/* Orbs */}
+      <div className="orb-a" style={{ position: 'absolute', width: '500px', height: '500px', borderRadius: '50%', pointerEvents: 'none', zIndex: 0, background: 'radial-gradient(circle, rgba(99,102,241,0.1), transparent 70%)', top: '-100px', right: '-100px', filter: 'blur(60px)' }} />
+      <div className="orb-b" style={{ position: 'absolute', width: '400px', height: '400px', borderRadius: '50%', pointerEvents: 'none', zIndex: 0, background: 'radial-gradient(circle, rgba(6,182,212,0.06), transparent 70%)', bottom: '200px', left: '-100px', filter: 'blur(60px)' }} />
+
+      {/* ─── HERO ─── */}
+      <section style={{ ...sectionStyle, padding: '9rem 0 5rem' }}>
+        <C maxW={900} style={{ textAlign: 'center' }}>
+          <div className="hero-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem', borderRadius: '9999px', marginBottom: '2rem', background: 'var(--bg-soft)', border: '1px solid var(--border)' }}>
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#34d399', display: 'inline-block', animation: 'pulse-dot 2s ease-in-out infinite' }} />
+            <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--primary)' }}>AI-Powered Diagnostics — v2.0</span>
           </div>
 
-          {/* Main Heading */}
-          <h1 className="reveal-item text-4xl md:text-7xl font-extrabold leading-[1.1] mb-8">
-            Diagnostic Accuracy <br />
-            <span className="text-gradient">Redefined by AI</span>
+          <h1 style={{ fontSize: 'clamp(3rem, 8vw, 6rem)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.03em', marginBottom: '1.5rem' }}>
+            <span className="hero-title-line" style={{ display: 'block' }}>Chest X-Ray</span>
+            <span className="hero-title-line text-gradient" style={{ display: 'block' }}>Intelligence</span>
           </h1>
 
-          {/* Subtext */}
-          <p className="reveal-item text-lg md:text-xl text-secondary max-w-2xl mx-auto mb-12 font-medium">
-            Deploying high-precision Gradient Boosting to detect 5 critical pathologies in seconds. Validated accuracy of 87.2% across diverse datasets.
+          <p className="hero-desc" style={{ fontSize: '1.125rem', color: 'var(--text-soft)', maxWidth: '560px', margin: '0 auto 2.5rem', lineHeight: 1.7 }}>
+            Upload a radiograph and our AI detects <strong>5 pathologies</strong> in under 2 seconds with <strong>87.2%</strong> validated accuracy.
           </p>
 
-          {/* Buttons */}
-          <div className="reveal-item flex flex-col sm:flex-row gap-5 items-center justify-center">
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '3rem' }}>
             <Link to="/predict">
-              <button className="glow-hover px-10 py-5 bg-primary text-white font-bold rounded-2xl flex items-center gap-3 group transition-all">
-                <FaLungs className="text-xl group-hover:rotate-12 transition-transform" />
-                Analyze New X-Ray
-                <HiOutlineArrowRight size={20} />
+              <button className="hero-btn btn-primary" style={{ fontSize: '1rem' }}>
+                Start Analysis <HiOutlineArrowRight size={20} />
               </button>
             </Link>
             <Link to="/dashboard">
-              <button className="px-10 py-5 glass-panel text-primary font-bold rounded-2xl border border-white/10 hover:bg-white/10 transition-all flex items-center gap-2">
-                <HiOutlineChartBar size={22} className="text-secondary" />
-                Access Dashboard
+              <button className="hero-btn btn-outline" style={{ fontSize: '1rem' }}>
+                <HiOutlineChartBar size={20} style={{ color: 'var(--primary)' }} /> View Dashboard
               </button>
             </Link>
           </div>
-        </div>
 
-        {/* Stats Grid */}
-        <div className="mt-32 grid grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
-          {STATS.map((stat, i) => (
-            <div key={i} className="stat-card glass-panel p-8 rounded-3xl text-center relative group">
-              <div className="absolute inset-0 bg-gradient-mesh opacity-0 group-hover:opacity-5 transition-opacity rounded-3xl" />
-              <h3 className="text-4xl font-black text-gradient mb-2">{stat.value}</h3>
-              <p className="text-sm font-bold text-primary opacity-80">{stat.label}</p>
-              <p className="text-[10px] font-bold text-muted uppercase tracking-wider mt-2">{stat.sub}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ─── Features Section ─── */}
-      <section className="relative z-10 py-32 border-t border-white/5">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid lg:grid-cols-3 gap-12">
-              <div className="lg:col-span-1">
-                <div className="reveal-item w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-8">
-                  <FaHeartbeat size={32} className="text-primary" />
-                </div>
-                <h2 className="reveal-item text-3xl font-bold mb-6">Expertise built into every prediction.</h2>
-                <p className="reveal-item text-secondary font-medium leading-relaxed">
-                  Our system combines classic radiologic pathology markers with state-of-the-art machine learning models to provide consistent diagnostic support.
-                </p>
-                
-                <div className="reveal-item mt-10 p-6 glass-panel rounded-2xl flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full border-2 border-primary flex items-center justify-center font-bold text-primary">HR</div>
-                  <div>
-                    <p className="text-sm font-bold">Scientific precision</p>
-                    <p className="text-xs text-muted">Model version: HistGradBoost-V2</p>
-                  </div>
-                </div>
+          <div className="hero-visual" style={{ maxWidth: '520px', margin: '0 auto' }}>
+            <div className="glass-card" style={{ padding: '1.25rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <div style={{ width: '56px', height: '56px', borderRadius: '12px', flexShrink: 0, position: 'relative', overflow: 'hidden', background: 'linear-gradient(135deg, #0f172a, #1e293b)' }}>
+                <div className="animate-scan" style={{ position: 'absolute', left: 0, right: 0, height: '2px', background: 'linear-gradient(90deg, transparent, var(--primary), transparent)', boxShadow: '0 0 8px var(--primary)', pointerEvents: 'none' }} />
               </div>
-
-              <div className="lg:col-span-2 grid md:grid-cols-2 gap-6">
-                {FEATURES.map((feature, i) => (
-                  <div key={i} className="reveal-item glass-panel p-10 rounded-3xl glow-hover group">
-                    <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-8 group-hover:bg-primary/20 transition-colors">
-                      <feature.icon size={28} className="text-primary" />
-                    </div>
-                    <h3 className="text-xl font-bold mb-4">{feature.title}</h3>
-                    <p className="text-sm text-secondary font-medium leading-[1.8]">
-                      {feature.desc}
-                    </p>
-                  </div>
-                ))}
-                
-                {/* Visual Placeholder for Scan */}
-                <div className="reveal-item glass-panel p-2 rounded-3xl overflow-hidden min-h-[200px] relative">
-                   <div className="absolute inset-0 bg-secondary opacity-10 animate-pulse" />
-                   <div className="absolute inset-x-0 h-[1px] bg-primary/30 top-1/2 shadow-[0_0_15px_var(--color-primary)] animate-[scan-line_4s_infinite_linear]" />
-                   <div className="absolute inset-0 flex items-center justify-center flex-col p-8 text-center">
-                      <HiOutlineStatusOnline size={40} className="text-primary opacity-40 mb-3" />
-                      <p className="text-xs font-bold text-muted uppercase tracking-widest">Live Analysis Pipeline Active</p>
-                   </div>
+              <div style={{ textAlign: 'left' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#34d399', display: 'inline-block', animation: 'pulse-dot 2s ease-in-out infinite' }} />
+                  <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#34d399' }}>Ready to Scan</span>
                 </div>
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Normal · COVID · Lung Opacity · Pneumonia</p>
               </div>
             </div>
           </div>
-        </div>
+        </C>
       </section>
 
-      {/* ─── CTA Section ─── */}
-      <section className="py-20 relative px-4">
-        <div className="max-w-4xl mx-auto glass-panel p-12 md:p-20 rounded-[3rem] text-center relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-mesh opacity-5" />
-          <h2 className="text-3xl md:text-5xl font-extrabold mb-8 italic">Trust but verify.</h2>
-          <p className="text-lg text-secondary mb-10 max-w-xl mx-auto font-medium">
-            Join the research community in testing the future of automated triage. Your feedback drives our continuous retraining cycle.
-          </p>
-          <Link to="/predict">
-            <button className="px-12 py-5 bg-primary text-white font-black rounded-2xl text-lg hover:scale-105 active:scale-95 transition-all">
-              Initialize Diagnostics
-            </button>
-          </Link>
-        </div>
+      {/* ─── STATS ─── */}
+      <section style={{ ...sectionStyle, padding: '4rem 0' }}>
+        <C>
+          <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.25rem' }}>
+            {STATS.map((s, i) => (
+              <div key={i} className="stat-card glass-card" style={{ padding: '1.75rem', textAlign: 'center' }}>
+                <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{s.icon}</div>
+                <p className="text-gradient" style={{ fontSize: '2.25rem', fontWeight: 900, lineHeight: 1 }}>{s.value}</p>
+                <p style={{ fontSize: '0.7rem', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', marginTop: '0.375rem', color: 'var(--text-muted)' }}>{s.label}</p>
+              </div>
+            ))}
+          </div>
+        </C>
       </section>
 
-      {/* Footer minimal */}
-      <footer className="py-10 text-center opacity-40 text-xs font-bold uppercase tracking-widest">
-        &copy; 2026 ChestXR AI System • v2.05-Stable
-      </footer>
+      {/* ─── FEATURES ─── */}
+      <section style={{ ...sectionStyle, padding: '6rem 0' }}>
+        <C>
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <p style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--primary)', marginBottom: '0.75rem' }}>Why ChestXR</p>
+            <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)', fontWeight: 900 }}>Built for <span className="text-gradient">accuracy</span></h2>
+          </div>
+          <div className="feat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+            {FEATURES.map((f, i) => (
+              <div key={i} className="feat-card glass-card" style={{ padding: '2.5rem' }}>
+                <div style={{ width: '52px', height: '52px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', background: `${f.color}18` }}>
+                  <f.icon size={26} style={{ color: f.color }} />
+                </div>
+                <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '0.75rem' }}>{f.title}</h3>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-soft)', lineHeight: 1.7 }}>{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </C>
+      </section>
+
+      {/* ─── HOW IT WORKS ─── */}
+      <section style={{ ...sectionStyle, padding: '6rem 0', background: 'var(--bg-soft)' }}>
+        <C>
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <p style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--primary)', marginBottom: '0.75rem' }}>How it works</p>
+            <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)', fontWeight: 900 }}>Three simple <span className="text-gradient">steps</span></h2>
+          </div>
+          <div className="steps-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+            {STEPS.map((s, i) => (
+              <div key={i} className="step-item glass-card" style={{ padding: '2.5rem', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', top: '-8px', right: '8px', fontSize: '5rem', fontWeight: 900, lineHeight: 1, pointerEvents: 'none', userSelect: 'none', color: 'var(--primary)', opacity: 0.05 }}>{s.num}</div>
+                <div style={{ width: '60px', height: '60px', borderRadius: '14px', margin: '0 auto 1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(99,102,241,0.1)' }}>
+                  <s.icon size={26} style={{ color: 'var(--primary)' }} />
+                </div>
+                <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '0.5rem' }}>{s.title}</h3>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-soft)' }}>{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </C>
+      </section>
+
+      {/* ─── CTA ─── */}
+      <section style={{ ...sectionStyle, padding: '6rem 0' }}>
+        <C maxW={760}>
+          <div className="cta-box glass-card gradient-border-top" style={{ padding: '4rem 3rem', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, var(--primary), var(--accent))', opacity: 0.03 }} />
+            <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)', fontWeight: 900, marginBottom: '1.25rem', position: 'relative', zIndex: 1 }}>Ready to analyze?</h2>
+            <p style={{ fontSize: '1rem', color: 'var(--text-soft)', marginBottom: '2.5rem', maxWidth: '460px', margin: '0 auto 2.5rem', lineHeight: 1.7, position: 'relative', zIndex: 1 }}>
+              Upload your chest X-ray and get instant AI-powered diagnostic insights.
+            </p>
+            <Link to="/predict" style={{ position: 'relative', zIndex: 1 }}>
+              <button className="btn-primary" style={{ fontSize: '1.1rem', padding: '1rem 2.5rem' }}>
+                Get Started Free <HiOutlineArrowRight size={22} />
+              </button>
+            </Link>
+          </div>
+        </C>
+      </section>
     </div>
   )
 }

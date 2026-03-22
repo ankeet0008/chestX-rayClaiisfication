@@ -7,12 +7,11 @@ import {
   HiOutlineMoon,
   HiOutlineMenu,
   HiOutlineX,
-  HiOutlineCube,
 } from 'react-icons/hi'
 
 const NAV_LINKS = [
-  { path: '/', label: 'Portal' },
-  { path: '/predict', label: 'Analysis' },
+  { path: '/', label: 'Home' },
+  { path: '/predict', label: 'Analyze' },
   { path: '/dashboard', label: 'Dashboard' },
 ]
 
@@ -33,76 +32,85 @@ export default function Navbar() {
   }, [location.pathname])
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-6 px-4 ${scrolled ? 'py-4' : 'py-8'}`}>
-      <div className={`max-w-7xl mx-auto glass-panel rounded-3xl transition-all duration-500 border-white/5 shadow-2xl ${
-        scrolled ? 'px-6 py-2' : 'px-8 py-4 bg-transparent border-transparent shadow-none'
-      }`}>
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center shadow-2xl shadow-primary/20 rotate-3 group-hover:rotate-12 transition-transform duration-500">
-              <HiOutlineCube className="text-white text-xl" />
-            </div>
-            <div className="hidden sm:block">
-              <span className="text-lg font-black tracking-tighter uppercase">
-                Chest<span className="text-gradient">XR</span>
-              </span>
-              <div className="h-0.5 w-0 group-hover:w-full bg-primary transition-all duration-500" />
-            </div>
+    <nav
+      style={{
+        position: 'fixed',
+        top: 0, left: 0, right: 0,
+        zIndex: 50,
+        transition: 'all 0.3s ease',
+        background: scrolled ? 'var(--bg)' : 'transparent',
+        borderBottom: scrolled ? '1px solid var(--border)' : '1px solid transparent',
+        backdropFilter: scrolled ? 'blur(20px)' : 'none',
+        padding: scrolled ? '0.75rem 0' : '1.25rem 0',
+      }}
+    >
+      <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '0 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-2.5 group">
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center font-black text-white text-sm" style={{ background: 'var(--primary)' }}>
+            XR
+          </div>
+          <span className="text-lg font-bold tracking-tight">
+            Chest<span className="text-gradient">XR</span>
+          </span>
+        </Link>
+
+        {/* Desktop Nav */}
+        <div className="hidden md:flex items-center gap-1">
+          {NAV_LINKS.map(({ path, label }) => {
+            const isActive = location.pathname === path
+            return (
+              <Link
+                key={path}
+                to={path}
+                className="relative px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                style={{
+                  color: isActive ? 'var(--primary)' : 'var(--text-soft)',
+                  background: isActive ? 'rgba(99,102,241,0.08)' : 'transparent',
+                }}
+              >
+                {label}
+              </Link>
+            )
+          })}
+        </div>
+
+        {/* Actions */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={toggleTheme}
+            className="w-9 h-9 flex items-center justify-center rounded-lg cursor-pointer transition-colors"
+            style={{ color: 'var(--text-soft)', border: '1px solid var(--border)' }}
+            aria-label="Toggle theme"
+          >
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={theme}
+                initial={{ rotate: -90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: 90, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {theme === 'dark' ? <HiOutlineSun size={18} /> : <HiOutlineMoon size={18} />}
+              </motion.div>
+            </AnimatePresence>
+          </button>
+
+          <Link
+            to="/predict"
+            className="hidden sm:inline-flex btn-primary text-sm"
+            style={{ padding: '0.5rem 1.25rem' }}
+          >
+            Analyze X-Ray
           </Link>
 
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-2">
-            {NAV_LINKS.map(({ path, label }) => {
-              const isActive = location.pathname === path
-              return (
-                <Link
-                  key={path}
-                  to={path}
-                  className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 ${
-                    isActive ? 'text-primary bg-primary/10' : 'text-muted hover:text-primary hover:bg-white/5'
-                  }`}
-                >
-                  {label}
-                </Link>
-              )
-            })}
-          </div>
-
-          {/* Actions */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={toggleTheme}
-              className="w-10 h-10 flex items-center justify-center rounded-2xl glass-panel border-white/5 hover:scale-110 active:scale-95 transition-all cursor-pointer shadow-xl text-primary"
-            >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={theme}
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {theme === 'dark' ? <HiOutlineSun size={20} /> : <HiOutlineMoon size={20} />}
-                </motion.div>
-              </AnimatePresence>
-            </button>
-
-            <Link
-              to="/predict"
-              className="hidden lg:inline-flex items-center gap-2 px-8 py-3 bg-primary text-white font-black text-[10px] uppercase tracking-widest rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-primary/30"
-            >
-              Analyze Examination
-            </Link>
-
-            {/* Mobile Menu Toggle */}
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden w-10 h-10 flex items-center justify-center rounded-2xl glass-panel text-primary"
-            >
-              {mobileOpen ? <HiOutlineX size={20} /> : <HiOutlineMenu size={20} />}
-            </button>
-          </div>
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="md:hidden w-9 h-9 flex items-center justify-center rounded-lg cursor-pointer"
+            style={{ color: 'var(--text-soft)', border: '1px solid var(--border)' }}
+          >
+            {mobileOpen ? <HiOutlineX size={18} /> : <HiOutlineMenu size={18} />}
+          </button>
         </div>
       </div>
 
@@ -110,31 +118,36 @@ export default function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-             initial={{ opacity: 0, y: -20, scale: 0.95 }}
-             animate={{ opacity: 1, y: 0, scale: 1 }}
-             exit={{ opacity: 0, y: -20, scale: 0.95 }}
-             className="md:hidden mt-4 mx-auto max-w-sm glass-panel rounded-[2rem] overflow-hidden shadow-2xl border-white/5 p-6 space-y-4"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="md:hidden overflow-hidden border-t"
+            style={{ background: 'var(--bg)', borderColor: 'var(--border)' }}
           >
-            {NAV_LINKS.map(({ path, label }) => {
-              const isActive = location.pathname === path
-              return (
-                <Link
-                  key={path}
-                  to={path}
-                  className={`block px-6 py-4 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all ${
-                    isActive ? 'bg-primary text-white shadow-xl shadow-primary/20' : 'text-muted hover:bg-white/5'
-                  }`}
-                >
-                  {label}
-                </Link>
-              )
-            })}
-            <Link
-              to="/predict"
-              className="block w-full py-5 bg-primary text-white text-center rounded-[1.5rem] font-black text-[10px] uppercase tracking-[0.2em] shadow-2xl"
-            >
-              Analyze X-Ray
-            </Link>
+            <div className="px-6 py-4 space-y-1">
+              {NAV_LINKS.map(({ path, label }) => {
+                const isActive = location.pathname === path
+                return (
+                  <Link
+                    key={path}
+                    to={path}
+                    className="block px-4 py-3 rounded-lg text-sm font-medium transition-colors"
+                    style={{
+                      color: isActive ? 'var(--primary)' : 'var(--text-soft)',
+                      background: isActive ? 'rgba(99,102,241,0.08)' : 'transparent',
+                    }}
+                  >
+                    {label}
+                  </Link>
+                )
+              })}
+              <Link to="/predict" className="block mt-3">
+                <button className="btn-primary w-full justify-center text-sm" style={{ padding: '0.75rem' }}>
+                  Analyze X-Ray
+                </button>
+              </Link>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

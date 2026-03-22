@@ -14,19 +14,14 @@ export default function PredictPage() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".reveal-predict", {
-        y: 30,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.1,
-        ease: "power3.out"
+      gsap.from('.predict-reveal', {
+        y: 30, opacity: 0, duration: 0.8, stagger: 0.12, ease: 'power3.out',
       })
     }, pageRef)
     return () => ctx.revert()
   }, [])
 
   const handleFileAccepted = useCallback(async (file) => {
-    // Generate preview
     const reader = new FileReader()
     reader.onload = () => setImagePreview(reader.result)
     reader.readAsDataURL(file)
@@ -37,14 +32,7 @@ export default function PredictPage() {
     try {
       const data = await predictImage(file)
       setResult(data)
-      toast.success(`Analysis complete: ${data.prediction}`, {
-        icon: '🔬',
-        style: {
-          borderRadius: '16px',
-          background: '#333',
-          color: '#fff',
-        },
-      })
+      toast.success(`Analysis complete: ${data.prediction}`)
     } catch (err) {
       console.error('Prediction error:', err)
       const message = err.response?.data?.detail || 'Failed to analyze image. Is the backend running?'
@@ -60,75 +48,54 @@ export default function PredictPage() {
   }
 
   return (
-    <div
-      ref={pageRef}
-      className="min-h-screen pt-32 pb-20 px-4 relative overflow-hidden"
-    >
-      <div className="mesh-bg opacity-20" />
-      
-      <div className="max-w-6xl mx-auto relative z-10">
+    <div style={{ width: '100%', minHeight: '100vh', paddingTop: '7rem', paddingBottom: '5rem', position: 'relative' }}>
+      <div style={{ maxWidth: '64rem', margin: '0 auto', padding: '0 1.5rem', position: 'relative', zIndex: 1 }}>
         {/* Header */}
-        <div className="reveal-predict text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[10px] uppercase tracking-widest font-black text-primary mb-4">
-             AI Diagnosis Gateway
+        <div className="predict-reveal text-center mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-4 text-xs font-semibold" style={{ background: 'rgba(99,102,241,0.08)', color: 'var(--primary)', border: '1px solid rgba(99,102,241,0.15)' }}>
+            <span className="w-1.5 h-1.5 rounded-full animate-pulse-dot" style={{ background: 'var(--primary)' }} />
+            AI Diagnosis Engine
           </div>
-          <h1 className="text-4xl md:text-5xl font-black mb-4">
-            Pathological <span className="text-gradient">Engine</span>
+          <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4">
+            X-Ray <span className="text-gradient">Analysis</span>
           </h1>
-          <p className="text-secondary max-w-xl mx-auto font-medium text-sm md:text-base">
-            Upload a high-resolution chest X-ray for immediate multi-class classification.
+          <p className="text-base max-w-xl mx-auto" style={{ color: 'var(--text-soft)' }}>
+            Upload a chest X-ray for instant multi-class classification.
             <br />
-            <span className="text-primary opacity-80 font-bold mt-2 block">
-              Targets: Normal • COVID • Lung Opacity • Pneumonia (Viral/Bacterial)
-            </span>
+            <strong style={{ color: 'var(--primary)' }}>Normal · COVID · Lung Opacity · Pneumonia (Viral/Bacterial)</strong>
           </p>
         </div>
 
-        {/* Upload or Results */}
-        <div className="reveal-predict">
+        {/* Content */}
+        <div className="predict-reveal">
           {result ? (
-            <div className="space-y-12">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
               <ResultCard result={result} imagePreview={imagePreview} />
-
-              <div className="text-center">
-                <button
-                  onClick={handleNewScan}
-                  className="px-8 py-4 bg-primary text-white font-black rounded-2xl glow-hover transition-all"
-                >
-                  Analyze Another Examination
+              <div style={{ textAlign: 'center' }}>
+                <button onClick={handleNewScan} className="btn-primary">
+                  Analyze Another X-Ray
                 </button>
               </div>
             </div>
           ) : (
-            <div className="max-w-3xl mx-auto">
-              <UploadZone
-                onFileAccepted={handleFileAccepted}
-                isLoading={isLoading}
-              />
+            <div style={{ maxWidth: '640px', margin: '0 auto' }}>
+              <UploadZone onFileAccepted={handleFileAccepted} isLoading={isLoading} />
             </div>
           )}
         </div>
 
-        {/* Instructions Grid */}
+        {/* Tips */}
         {!result && !isLoading && (
-          <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          <div className="predict-reveal" style={{ marginTop: '3rem', maxWidth: '720px', margin: '3rem auto 0', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
             {[
-              { title: 'Standardized View', desc: 'Optimized for PA/AP radiographic projections.' },
-              { title: 'Pathology Mapping', desc: 'Identifies density variants and focal opacities.' },
-              { title: 'Instant Inference', desc: 'Gradient Boosting results in < 2 seconds.' },
-            ].map((tip, i) => (
-              <div
-                key={i}
-                className="reveal-predict glass-panel p-8 rounded-3xl group hover:border-primary/30 transition-colors"
-                style={{ transitionDelay: `${i * 100}ms` }}
-              >
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-5 font-black text-primary">
-                   0{i + 1}
-                </div>
-                <h4 className="font-bold mb-2">{tip.title}</h4>
-                <p className="text-xs text-secondary font-medium leading-relaxed">
-                  {tip.desc}
-                </p>
+              { emoji: '📋', title: 'PA/AP View', desc: 'Best results with standard chest views' },
+              { emoji: '🔍', title: 'Clear Image', desc: 'Ensure good contrast and resolution' },
+              { emoji: '⚡', title: 'Fast Results', desc: 'Analysis completes in seconds' },
+            ].map(({ emoji, title, desc }) => (
+              <div key={title} className="glass-card" style={{ padding: '1.25rem', textAlign: 'center' }}>
+                <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{emoji}</div>
+                <h4 style={{ fontSize: '0.875rem', fontWeight: 700, marginBottom: '0.25rem' }}>{title}</h4>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{desc}</p>
               </div>
             ))}
           </div>

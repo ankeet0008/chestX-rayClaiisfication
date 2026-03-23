@@ -168,6 +168,31 @@ docker-compose up --build
 
 ---
 
+## ☁️ Cloud Deployment (Free Hosting)
+
+This project is pre-configured for a dual-tier deployment: **Vercel** for the frontend and **Render** for the heavy machine learning backend.
+
+### 1. Backend (Render)
+1. **GitHub:** Push your code to a GitHub repository.
+2. **Setup:** Create a new **Web Service** on Render connected to your repo.
+3. **Settings:**
+   - **Root Directory:** `backend`
+   - **Runtime:** `Python 3`
+   - **Build Command:** `pip install -r requirements.txt`
+   - **Start Command:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+4. **Environment Variables:**
+   - `PYTHON_VERSION`: `3.10.11`
+   - `ALLOWED_ORIGINS`: `https://your-vercel-app.vercel.app` (Add after Step 2)
+
+### 2. Frontend (Vercel)
+1. **GitHub:** Connect the same repo to Vercel.
+2. **Settings:**
+   - **Root Directory:** Leave as the root (`/`). Vercel will auto-detect the `package.json` and run the build script.
+3. **Environment Variables:**
+   - `VITE_API_URL`: `https://your-render-app.onrender.com` (Your Render URL)
+
+---
+
 ## 📡 API Reference
 
 ### `POST /api/predict`

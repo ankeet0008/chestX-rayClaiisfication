@@ -97,7 +97,7 @@ export default function UploadZone({ onFileAccepted, isLoading }) {
               <div className="absolute inset-0 rounded-full animate-spin" style={{ border: '3px solid transparent', borderTopColor: 'var(--primary)' }} />
             </div>
             <p className="text-white text-sm font-semibold">Analyzing X-Ray…</p>
-            <p className="text-white/50 text-xs mt-1">This may take a few seconds</p>
+            <p className="text-white/50 text-xs mt-1">First request may take up to 60s if the server is waking up</p>
           </div>
         )}
       </div>

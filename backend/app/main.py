@@ -9,6 +9,11 @@ Production-ready API server with:
 """
 
 import os
+import sys
+
+# CRITICAL for Vercel: Add backend directory to Python path so 'app' is recognized
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 import logging
 from contextlib import asynccontextmanager
 

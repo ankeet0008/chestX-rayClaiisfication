@@ -31,8 +31,9 @@ CLASS_LABELS = [
     "Lung Opacity",
 ]
 
-# Path to the model directory
-MODEL_DIR = Path(os.getenv("MODEL_DIR", "model"))
+# Path to the model directory relative to this file
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+MODEL_DIR = Path(os.getenv("MODEL_DIR", str(BASE_DIR / "backend" / "model")))
 
 
 class Predictor:
@@ -74,8 +75,7 @@ class Predictor:
         model_dir = MODEL_DIR
         
         if not model_dir.exists():
-            model_dir.mkdir(parents=True, exist_ok=True)
-            logger.warning(f"Model directory created at {model_dir}. No model found — running in DEMO mode.")
+            logger.warning(f"Model directory not found at {model_dir}. Running in DEMO mode.")
             return
         
         # Try loading TensorFlow/Keras model

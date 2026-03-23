@@ -47,8 +47,8 @@ async def lifespan(app: FastAPI):
     logger.info("  🫁 Chest X-Ray Classification API — Starting Up")
     logger.info("━" * 60)
     
-    # Ensure model directory exists
-    os.makedirs("model", exist_ok=True)
+    # Ensure model directory exists (using /tmp/ for Vercel's read-only filesystem)
+    os.makedirs("/tmp/model", exist_ok=True)
     
     yield
     

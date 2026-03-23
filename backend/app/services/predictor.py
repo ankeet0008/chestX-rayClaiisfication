@@ -33,7 +33,7 @@ CLASS_LABELS = [
 
 # Path to the model directory relative to this file
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-MODEL_DIR = Path(os.getenv("MODEL_DIR", str(BASE_DIR / "backend" / "model")))
+MODEL_DIR = Path(os.getenv("MODEL_DIR", str(BASE_DIR / "model")))
 
 
 class Predictor:

@@ -2,14 +2,14 @@ import { useState } from 'react'
 
 const faqs = [
   {
-    btnText: 'How does ClinicalLens AI handle patient privacy?',
+    btnText: 'How does Chest XR handle patient privacy?',
     content:
       'We are fully HIPAA and GDPR compliant. Our system uses "De-identification at the Edge," meaning all patient names, IDs, and birthdates are stripped from the metadata before the image ever leaves your local network. Only the pixel data is analyzed.',
   },
   {
     btnText: 'Is this intended to replace the radiologist?',
     content:
-      'Absolutely not. ClinicalLens AI is a diagnostic support tool—a "second set of eyes." It is designed to flag potential abnormalities for clinician review, reducing diagnostic fatigue and helping prioritize urgent cases in a busy workflow.',
+      'Absolutely not. Chest XR is a diagnostic support tool—a "second set of eyes." It is designed to flag potential abnormalities for clinician review, reducing diagnostic fatigue and helping prioritize urgent cases in a busy workflow.',
   },
   {
     btnText: 'What is the cost structure for medical institutions?',
@@ -72,7 +72,7 @@ export default function TechnologyPage() {
         <div className="max-w-screen-xl mx-auto px-6 md:px-12">
           <div className="text-center mb-20">
             <h2 className="font-headline text-3xl md:text-4xl font-bold mb-5">
-              The ClinicalLens Workflow
+              The Chest XR Workflow
             </h2>
             <p className="text-on-surface-variant max-w-xl mx-auto text-lg">
               A seamless integration into existing hospital PACS networks,
@@ -135,7 +135,7 @@ export default function TechnologyPage() {
             </h2>
             <p className="text-on-surface-variant leading-relaxed max-w-2xl text-lg">
               Our models are trained on over 2.5 million verified clinical cases
-              from global teaching hospitals. Unlike generic AI, ClinicalLens is
+              from global teaching hospitals. Unlike generic AI, Chest XR is
               optimized specifically for the unique contrast and density profiles
               of digital radiography.
             </p>
@@ -231,7 +231,7 @@ export default function TechnologyPage() {
                   <div className="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-primary">
                     <span className="material-symbols-outlined">mail</span>
                   </div>
-                  <span className="font-medium text-sm">support@clinicallens.ai</span>
+                  <span className="font-medium text-sm">support@chestxr.ai</span>
                 </div>
                 <div className="flex items-center gap-5">
                   <div className="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-primary">

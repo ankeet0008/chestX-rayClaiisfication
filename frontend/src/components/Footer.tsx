@@ -5,9 +5,9 @@ export default function Footer() {
     <footer className="bg-[#f0f4f8] dark:bg-slate-900 border-t border-[#c2c6d4]/10">
       <div className="w-full px-8 py-12 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-screen-2xl mx-auto">
         <div className="space-y-4">
-          <div className="text-lg font-bold text-[#424752] dark:text-slate-300 font-headline">ClinicalLens Diagnostics</div>
+          <div className="text-lg font-bold text-[#424752] dark:text-slate-300 font-headline">Chest XR Diagnostics</div>
           <p className="text-[#424752] dark:text-slate-400 font-body text-xs leading-relaxed max-w-sm">
-            © 2024 ClinicalLens Diagnostics. FDA Cleared Class II Software. AI models are intended as diagnostic aids and should be reviewed by qualified medical professionals.
+            © 2024 Chest XR Diagnostics. FDA Cleared Class II Software. AI models are intended as diagnostic aids and should be reviewed by qualified medical professionals.
           </p>
         </div>
         

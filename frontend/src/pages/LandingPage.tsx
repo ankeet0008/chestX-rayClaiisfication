@@ -21,7 +21,7 @@ export default function LandingPage() {
             </h1>
 
             <p className="text-lg md:text-xl text-on-surface-variant max-w-xl leading-relaxed">
-              ClinicalLens AI provides high-precision diagnostic assistance for
+              Chest XR provides high-precision diagnostic assistance for
               chest X-rays, reducing interpretation time and increasing detection
               accuracy through advanced neural networks.
             </p>
@@ -152,7 +152,7 @@ export default function LandingPage() {
                     Native PACS Integration
                   </h3>
                   <p className="text-on-surface-variant leading-relaxed text-sm">
-                    ClinicalLens AI integrates directly with your existing DICOM
+                    Chest XR integrates directly with your existing DICOM
                     viewers and hospital information systems. No disruptive
                     workflow changes required.
                   </p>
@@ -181,7 +181,7 @@ export default function LandingPage() {
             Ready to elevate your clinical precision?
           </h2>
           <p className="text-xl text-on-surface-variant">
-            Join 500+ medical facilities worldwide using ClinicalLens AI for
+            Join 500+ medical facilities worldwide using Chest XR for
             smarter diagnostics.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-5">

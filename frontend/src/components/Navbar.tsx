@@ -12,7 +12,7 @@ export default function Navbar() {
           to="/"
           className="text-xl font-bold tracking-tight text-[#171c1f] font-headline"
         >
-          ClinicalLens AI
+          Chest XR
         </Link>
 
         <div className="hidden md:flex gap-10 items-center">

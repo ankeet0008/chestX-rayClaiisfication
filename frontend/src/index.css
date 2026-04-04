@@ -1,67 +1,83 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════
-   Chest XR — Design System
+   Chest XR — Emerald Clinical Design System
    ═══════════════════════════════════════════════════════════ */
 
 @theme {
-  --color-surface-container-low: #f0f4f8;
-  --color-outline: #727783;
-  --color-on-surface: #171c1f;
-  --color-background: #f6fafe;
-  --color-on-tertiary-fixed: #341100;
-  --color-on-error-container: #93000a;
-  --color-surface: #f6fafe;
-  --color-on-primary-fixed: #001b3d;
-  --color-inverse-on-surface: #edf1f5;
-  --color-secondary: #48626e;
-  --color-secondary-fixed: #cbe7f5;
-  --color-tertiary-fixed: #ffdbcb;
-  --color-on-secondary: #ffffff;
-  --color-surface-container-high: #e4e9ed;
-  --color-on-secondary-fixed-variant: #304a55;
-  --color-on-surface-variant: #424752;
-  --color-surface-container-highest: #dfe3e7;
-  --color-outline-variant: #c2c6d4;
-  --color-primary: #00478d;
-  --color-surface-tint: #005db6;
-  --color-secondary-container: #cbe7f5;
-  --color-on-tertiary-container: #ffcfb9;
-  --color-on-primary: #ffffff;
-  --color-on-background: #171c1f;
-  --color-surface-variant: #dfe3e7;
-  --color-surface-container: #eaeef2;
-  --color-on-primary-fixed-variant: #00468c;
-  --color-primary-container: #005eb8;
-  --color-error: #ba1a1a;
-  --color-primary-fixed: #d6e3ff;
-  --color-inverse-surface: #2c3134;
-  --color-primary-fixed-dim: #a9c7ff;
-  --color-tertiary-container: #9f4300;
-  --color-tertiary: #793100;
-  --color-inverse-primary: #a9c7ff;
-  --color-on-tertiary: #ffffff;
-  --color-on-secondary-fixed: #021f29;
-  --color-on-tertiary-fixed-variant: #793100;
-  --color-secondary-fixed-dim: #afcbd8;
-  --color-error-container: #ffdad6;
-  --color-on-primary-container: #c8daff;
-  --color-on-error: #ffffff;
-  --color-tertiary-fixed-dim: #ffb691;
-  --color-surface-container-lowest: #ffffff;
-  --color-on-secondary-container: #4e6874;
-  --color-surface-dim: #d6dade;
-  --color-surface-bright: #f6fafe;
-  --color-success: #16a34a;
+  /* ─── Primary (Emerald Green) ─────────────────────────── */
+  --color-primary:                 #006d36;
+  --color-primary-container:       #2ccc70;
+  --color-primary-fixed:           #6afe9b;
+  --color-primary-fixed-dim:       #49e181;
+  --color-on-primary:              #ffffff;
+  --color-on-primary-container:    #005026;
+  --color-on-primary-fixed:        #00210c;
+  --color-on-primary-fixed-variant:#005227;
+  --color-inverse-primary:         #49e181;
 
-  --font-headline: "Manrope", sans-serif;
-  --font-body: "Inter", sans-serif;
-  --font-label: "Inter", sans-serif;
+  /* ─── Secondary ───────────────────────────────────────── */
+  --color-secondary:               #4b6076;
+  --color-secondary-container:     #cce2fc;
+  --color-secondary-fixed:         #cfe5ff;
+  --color-secondary-fixed-dim:     #b3c9e2;
+  --color-on-secondary:            #ffffff;
+  --color-on-secondary-container:  #50657b;
+  --color-on-secondary-fixed:      #051d30;
+  --color-on-secondary-fixed-variant:#34495e;
+
+  /* ─── Tertiary ────────────────────────────────────────── */
+  --color-tertiary:                #98472a;
+  --color-tertiary-container:      #ff9875;
+  --color-tertiary-fixed:          #ffdbd0;
+  --color-tertiary-fixed-dim:      #ffb59d;
+  --color-on-tertiary:             #ffffff;
+  --color-on-tertiary-container:   #772e14;
+  --color-on-tertiary-fixed:       #390c00;
+  --color-on-tertiary-fixed-variant:#793015;
+
+  /* ─── Error ───────────────────────────────────────────── */
+  --color-error:                   #ba1a1a;
+  --color-error-container:         #ffdad6;
+  --color-on-error:                #ffffff;
+  --color-on-error-container:      #93000a;
+
+  /* ─── Surfaces (Warm Cream) ───────────────────────────── */
+  --color-background:              #fdf9ef;
+  --color-on-background:           #1c1c16;
+  --color-surface:                 #fdf9ef;
+  --color-surface-dim:             #dddad0;
+  --color-surface-bright:          #fdf9ef;
+  --color-surface-container-lowest:#ffffff;
+  --color-surface-container-low:   #f7f3e9;
+  --color-surface-container:       #f1eee4;
+  --color-surface-container-high:  #ece8de;
+  --color-surface-container-highest:#e6e2d8;
+  --color-surface-tint:            #006d36;
+  --color-surface-variant:         #e6e2d8;
+  --color-on-surface:              #1c1c16;
+  --color-on-surface-variant:      #3d4a3e;
+  --color-inverse-surface:         #31312a;
+  --color-inverse-on-surface:      #f4f0e7;
+
+  /* ─── Outline ─────────────────────────────────────────── */
+  --color-outline:                 #6c7b6d;
+  --color-outline-variant:         #bbcbbb;
+
+  /* ─── Typography ──────────────────────────────────────── */
+  --font-headline: "Plus Jakarta Sans", sans-serif;
+  --font-body:     "Manrope", sans-serif;
+  --font-label:    "Manrope", sans-serif;
+
+  /* ─── Border Radius ───────────────────────────────────── */
+  --radius-DEFAULT: 1rem;
+  --radius-lg:      2rem;
+  --radius-xl:      3rem;
 }
 
 :root {
-  --primary: #00478d;
-  --primary-container: #005eb8;
+  --primary:           #006d36;
+  --primary-container: #2ccc70;
 }
 
 /* ─── Base ──────────────────────────────────────────────── */
@@ -83,42 +99,24 @@ body {
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   vertical-align: middle;
+  display: inline-block;
+  line-height: 1;
 }
 
-/* ─── Glassmorphism & Shadows ─────────────────────────────── */
-.glass-panel {
-  background: rgba(246, 250, 254, 0.8);
+/* ─── Glass / Backdrop ────────────────────────────────── */
+.glass-nav {
+  background-color: rgba(253, 249, 239, 0.8);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
 
-.glass-hud {
-  background: rgba(223, 227, 231, 0.7);
-  backdrop-filter: blur(12px);
-}
-
+/* ─── Shadows ─────────────────────────────────────────── */
 .cloud-shadow {
-  box-shadow: 0 24px 48px -12px rgba(23, 28, 31, 0.06);
+  box-shadow: 0 8px 32px 0 rgba(28, 28, 22, 0.06);
 }
 
-.diagnostic-gradient {
-  background: linear-gradient(135deg, #00478d 0%, #005eb8 100%);
-}
-
-.diagnostic-overlay {
-  background: rgba(223, 227, 231, 0.7);
-  backdrop-filter: blur(12px);
-}
-
-.gradient-primary {
-  background: linear-gradient(135deg, #00478d 0%, #005eb8 100%);
-}
-
-.text-gradient {
-  background: linear-gradient(135deg, #00478d 0%, #005eb8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.cloud-shadow-lg {
+  box-shadow: 0 16px 48px -8px rgba(28, 28, 22, 0.10);
 }
 
 /* ─── Animations ─────────────────────────────────────────── */
@@ -131,10 +129,41 @@ body {
   animation: pulse-dot 2s ease-in-out infinite;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
+/* ─── Hero text mask layout ──────────────────── */
+.hero-text-mask {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+/* ─── Organic mask pill for Results Dashboard ─── */
+.organic-mask-pill {
+  border-radius: 9999px 1rem 9999px 1rem;
+}
+
+/* Hero capsule mask */
+.hero-capsule-mask {
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
   background: var(--color-primary);
   border-radius: 99px;
+}
+
+/* ─── Selection ──────────────────────────────────────────── */
+::selection {
+  background: rgba(44, 204, 112, 0.3);
+}
+
+/* ─── Input focus ────────────────────────────────────────── */
+input:focus, textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 109, 54, 0.2);
 }

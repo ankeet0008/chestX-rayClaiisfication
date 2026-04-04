@@ -8,6 +8,7 @@ import LandingPage from './pages/LandingPage'
 import AnalysisPortalPage from './pages/AnalysisPortalPage'
 import ResultsDashboardPage from './pages/ResultsDashboardPage'
 import TechnologyPage from './pages/TechnologyPage'
+import FAQPage from './pages/FAQPage'
 
 const pageVariants = {
   initial: { opacity: 0, y: 15 },
@@ -49,6 +50,7 @@ export default function App() {
               <Route path="/predict" element={<AnalysisPortalPage />} />
               <Route path="/dashboard" element={<ResultsDashboardPage />} />
               <Route path="/technology" element={<TechnologyPage />} />
+              <Route path="/faq" element={<FAQPage />} />
               {/* Fallback to landing */}
               <Route path="*" element={<LandingPage />} />
             </Routes>

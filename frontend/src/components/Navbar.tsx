@@ -10,13 +10,13 @@ export default function Navbar() {
   const isActive = (path: string) => location.pathname === path
 
   useEffect(() => {
-    if (navRef.current) {
+    if (navRef.current && location.pathname !== '/') {
       gsap.fromTo(navRef.current, { y: -60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' })
     }
   }, [])
 
   return (
-    <nav ref={navRef} className="fixed top-0 w-full z-50 glass-nav">
+    <nav ref={navRef} id="main-navbar" className="fixed top-0 w-full z-50 glass-nav">
       <div className="flex justify-between items-center px-8 py-4 max-w-screen-2xl mx-auto">
         <div className="flex items-center gap-8">
           <Link to="/" className="text-2xl font-bold text-primary font-headline tracking-tight">

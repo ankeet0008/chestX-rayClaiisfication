@@ -29,6 +29,12 @@ export default function TechnologyPage() {
         scrollTrigger: { trigger: '.compliance-section', start: 'top 75%' }
       })
 
+      // Tech Stack
+      gsap.fromTo('.stack-card', { opacity: 0, y: 30, scale: 0.95 }, {
+        opacity: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.1, ease: 'power2.out',
+        scrollTrigger: { trigger: '.tech-stack-section', start: 'top 80%' }
+      })
+
       // Privacy
       gsap.fromTo('.privacy-item', { opacity: 0, x: -30 }, {
         opacity: 1, x: 0, duration: 0.6, stagger: 0.2,
@@ -70,14 +76,28 @@ export default function TechnologyPage() {
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuCb2vOXMQVu68XQEj-BWlFK9aSkb4dG1xB62kaxwOUb2qQ-Y-DrzFO5ixodhT9ONOcFJvgdWTz3fov5kZ9AiQtpXYXAZc6cIGj8mbk9XAA7-u_ol-3ou71lio8kurw38XS4a896SROW3rfoOx3hK1AMZOoFeodswekRMwSaN_6Qix_Xf7r3Cqx5YXSumcrVs2enTQ6dH4AInVlOYQNE28IH4WLVdTOWZEo77zssrP-x3wKSksb2WdJqkJnBmye8v9N83lwg1too4go"
             />
           </div>
-          <div className="tech-accuracy-card absolute -bottom-8 -left-8 bg-surface-container-highest p-8 rounded-2xl z-20 max-w-xs shadow-xl border border-white/20">
-            <div className="flex items-center gap-4 mb-3">
+          <div className="tech-accuracy-card absolute -bottom-8 -left-8 md:-bottom-12 md:-left-12 bg-surface-container-highest/90 p-8 rounded-3xl z-20 max-w-sm shadow-2xl border border-white/10 backdrop-blur-xl">
+            <div className="flex items-center gap-4 mb-5">
               <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-on-primary">
-                <span className="material-symbols-outlined">verified_user</span>
+                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>query_stats</span>
               </div>
-              <p className="font-bold text-lg">99.9% Accuracy</p>
+              <div>
+                <p className="font-bold text-lg leading-tight">Empirical Performance</p>
+                <p className="text-[10px] text-on-surface-variant tracking-[0.2em] font-bold uppercase mt-1">Sklearn • Test Split</p>
+              </div>
             </div>
-            <p className="text-sm text-on-surface-variant">Validated against 2.5 million peer-reviewed clinical cases.</p>
+            
+            <div className="flex gap-8 border-t border-outline-variant/20 pt-5">
+              <div>
+                <p className="text-4xl font-headline font-extrabold text-primary mb-1">92.4%</p>
+                <p className="text-xs font-bold text-on-surface-variant tracking-wider uppercase">Validation Acc</p>
+              </div>
+              <div className="w-px bg-outline-variant/20"></div>
+              <div>
+                <p className="text-4xl font-headline font-extrabold text-primary mb-1">0.91</p>
+                <p className="text-xs font-bold text-on-surface-variant tracking-wider uppercase">F1 Score (Macro)</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -135,6 +155,57 @@ export default function TechnologyPage() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ════════════ ENGINEERING STACK & AESTHETICS ════════════ */}
+      <section className="tech-stack-section py-32 px-8 max-w-7xl mx-auto">
+        <div className="mb-20 text-center">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-secondary-container text-on-secondary-container font-label text-sm font-bold tracking-widest mb-4">
+            UNDER THE HOOD
+          </span>
+          <h2 className="text-4xl md:text-5xl font-headline font-bold mb-6">Built for Performance & Beauty</h2>
+          <p className="text-on-surface-variant max-w-2xl mx-auto text-lg leading-relaxed">
+            Our platform merges bleeding-edge machine learning with a cinematic user experience. We utilize highly-specialized libraries to maintain fluid motion, pixel-perfect aesthetics, and rapid inference delivery.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            {
+              icon: 'animation',
+              title: 'GSAP Animation',
+              desc: 'Cinematic micro-interactions, scroll-triggered timelines, and physics-based sequencing to bring the interface to life.',
+            },
+            {
+              icon: 'palette',
+              title: 'Tailwind CSS V4',
+              desc: 'Robust token-based design system managing harmonious color palettes (HSL), deep dark modes, and crisp typography.',
+            },
+            {
+              icon: 'view_quilt',
+              title: 'React 19 & Vite',
+              desc: 'Blazing fast frontend performance with modern functional components, state management, and optimized asset delivery.',
+            },
+            {
+              icon: 'memory',
+              title: 'FastAPI & Sklearn',
+              desc: 'High-throughput async Python backend serving HistGradientBoosting and RandomForest classification models instantly.',
+            }
+          ].map((stack, idx) => (
+            <div key={idx} className="stack-card bg-surface-container-low p-8 rounded-3xl border border-outline-variant/10 hover:bg-surface-container-highest transition-colors group relative overflow-hidden">
+              <div className="text-primary mb-6 transition-transform group-hover:scale-110 group-hover:text-primary-container-highest origin-left duration-300">
+                <span className="material-symbols-outlined text-5xl" style={{ fontVariationSettings: "'FILL' 1" }}>{stack.icon}</span>
+              </div>
+              <h4 className="text-xl font-headline font-bold mb-3">{stack.title}</h4>
+              <p className="text-on-surface-variant leading-relaxed text-sm">
+                {stack.desc}
+              </p>
+              <div className="absolute right-[-20%] bottom-[-20%] opacity-0 group-hover:opacity-5 transition-opacity duration-500 text-primary pointer-events-none">
+                 <span className="material-symbols-outlined text-[15rem] leading-none">{stack.icon}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
